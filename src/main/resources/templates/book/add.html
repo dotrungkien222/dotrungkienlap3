@@ -14,6 +14,7 @@
         <div class="col-6 mb-3">
             <label for="title" class="form-label">id:</label>
             <input type="text" th:field="*{id}" class="form-control" id="id">
+            <span class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
         </div>
         <div class="col-6 mb-3">
             <label for="title" class="form-label">title:</label>
@@ -22,10 +23,12 @@
         <div class="col-6 mb-3">
             <label for="author" class="form-label">author:</label>
             <input type="text" th:field="*{author}" class="form-control" id="author">
+
         </div>
         <div class="col-6 mb-3">
             <label for="price" class="form-label">price:</label>
             <input type="text" th:field="*{price}" class="form-control" id="price">
+            <span class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
         </div>
         <div class="col-6 mb-3">
             <label for="category" class="form-label">category:</label>
@@ -33,6 +36,7 @@
                 <option value="">-- Chon Category --</option>
                 <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
             </select>
+            <span class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
 
         </div>
         <input type="submit" value="Save">
