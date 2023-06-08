@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="Layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Cart</title>
+</head>
+<body>
+<div layout:fragment="body-content">
+  <div th:if="${not #lists.isEmpty(cart.cartItems)}">
+    <table class="table">
+      <thead>
+      <tr>
+        <th scope="col">Book ID</th>
+        <th scope="col">Book Name</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Total</th>
+        <th scope="col">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${cart.cartItems}">
+        <td th:text="${item.getID()}"></td>
+        <td th:text="${item.getTitle()}"></td>
+        <td>
+          <label>
+            <input type="number" min="1"
+                   th:value="${item.getQuantity()}"
+                   th:attr="data-id=${item.getID()}"
+                   class="form-control quantity">
+          </label>
+        </td>
+        <td th:text="${item.getPrice()}"></td>
+        <td th:text="${item.getPrice() * item.getQuantity()}"></td>
+        <td>
+          <a class="btn btn-danger"
+             th:href="@{/cart/removeFromCart/{id}(id=${item.getID()})}">
+            Remove
+          </a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Total: <span th:text="${totalPrice}"></span></h3>
+      </div>
+      <div class="col-md-12 text-center">
+        <a class="btn btn-success"
+           th:href="@{/cart/checkout}">Checkout</a>
+        <a class="btn btn-danger"
+           th:href="@{/cart/clearCart}">Clear Cart</a>
+      </div>
+    </div>
+  </div>
+  <div th:if="${#lists.isEmpty(cart.cartItems)}">
+    <div class="row">
+      <div class="col-md-6 offset-md-3 text-center">
+        <h3 class="mt-5">Your cart is empty</h3>
+        <p class="lead">Please add some books to your cart</p>
+        <a class="btn btn-primary" href="/book">Go to list
+          book</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script layout:fragment="text-js" th:src="@{/js/cart.js}">
+</script>
+</body>
+</html>

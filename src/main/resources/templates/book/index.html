@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="Layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home</title>
+</head>
+<body>
+<div layout:fragment="body-content">
+    <h1 class="text-center">List Book</h1>
+
+    <a th:href="@{/book/add}"
+       class="btn btn-primary mb-3"
+       sec:authorize="hasAnyAuthority('ADMIN')">Add Book</a>
+    <table class="table">
+        <tr>
+            <th>
+                <a th:href="@{/book(pageNo=${currentPage}, sortBy='id')}">ID</a>
+            </th>
+            <th>
+                <a th:href="@{/book(pageNo=${currentPage}, sortBy='title')}">Title</a>
+            </th>
+            <th>
+                <a th:href="@{/book(pageNo=${currentPage}, sortBy='author')}">Author</a>
+            </th>
+            <th>
+                <a th:href="@{/book(pageNo=${currentPage}, sortBy='price')}">Price</a>
+            </th>
+            <th>
+                <a th:href="@{/book(pageNo=${currentPage}, sortBy='category')}">Category</a>
+            </th>
+            <th>Pic</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.id}"></td>
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.price}"></td>
+            <td th:text="${book.category.name}"></td>
+            <td><img th:src="@{'/images/'+${book.cover}}" th:alt="${book.title}" src="" height="80px"></td>
+            <td>
+                    <span sec:authorize="hasAnyAuthority('ADMIN')">
+                    <a class="btn btn-primary" th:href="@{/book/edit/{id}(id=${book.id})}">Edit</a>
+                    <a class="btn btn-danger" th:href="@{/book/delete/{id}(id=${book.id})}" onclick="return confirm('Are you sure?');">Delete</a>
+                    </span>
+                <form th:action="@{/book/add-to-cart}" method="post" class="d-inline">
+                    <input type="hidden" name="id" th:value="${book.getId()}">
+                    <input type="hidden" name="name" th:value="${book.getTitle()}">
+                    <input type="hidden" name="price"
+                           th:value="${book.getPrice()}">
+                    <button type="submit" class="btn btn-success"
+                            onclick="return confirm('Are you sure you want to add this book to cart?')">
+                        Add to cart</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center pagination-sm"
+            th:each="i : ${#numbers.sequence(0, totalPages)}">
+            <li class="page-item" th:classappend="${currentPage == i} ? 'active'">
+                <a class="page-link" th:href="@{/book(pageNo=${i})}"
+                   th:text="${i}"></a>
+            </li>
+        </ul>
+    </nav>
+</div>
+</body>
+</html>
